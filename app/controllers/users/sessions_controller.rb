@@ -6,9 +6,11 @@ class Users::SessionsController < Devise::SessionsController
   private
 
   def respond_with(resource, options={})
-    render json: {
-      status: { code: 200, message: "User signed in successfully", data: current_user }
-    }, status: :ok
+    if current_user
+      render json: { status: {code: 200, message: "Signed in successfully", data: current_user } }, status: :ok
+    else
+      render json: { status: 401, message: 'Only POST request allowed for Sign in' }, status: :unprocessable_entity
+    end
   end
 
   def respond_to_on_destroy
